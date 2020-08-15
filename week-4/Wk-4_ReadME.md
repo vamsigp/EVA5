@@ -3,18 +3,21 @@
 Have tried with Multiple notebooks.
 
 1. EVA5_Session_4.ipynb
+
 	a. Max Accuracy = 99.46%
 	b. Max Accuracy at Epoch = 17
 	c. Total number of Parameters = 14308
 	d. Final Accuracy  = 99.40%
 	
 2. EVA5_Session_4_1.ipynb
+
 	a. Max Accuracy = 99.42%
 	b. Max Accuracy at Epoch = 17 and 20
 	c. Total number of Parameters = 10538
 	d. Final Accuracy  = 99.42%
 	
 3. EVA5_Session_4_3.ipynb
+
 	a. Max Accuracy = 90.4%
 	b. Max Accuracy at Epoch = 19
 	c. Total number of Parameters = 11242 
