@@ -74,11 +74,12 @@
 4. Iteration 4
 
     - [EVA5_WK_5_4](./week-5/submission/EVA5_WK_5_4.ipynb)
+    
     1. Target
-
-      Reach target Accuracy
-      Model Accuracy should be consistent
-      Add Learning rate scheduler
+    
+         Reach target Accuracy
+         Model Accuracy should be consistent
+         Add Learning rate scheduler
       
     2. Result
       
