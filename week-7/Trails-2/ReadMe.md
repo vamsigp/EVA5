@@ -12,6 +12,17 @@
 1. Total Parameters - 330538
 2. Final Receptive Field - 108
 
+### Test Accuracy Vs Epoch
+![TestAccuracy Vs Epoch](https://github.com/vamsigp/EVA5/blob/master/week-7/Trails-2/val_test%20accuracy_change.png)
+
+### TestLoss Vs Epoch
+![Test Loss Vs Epoch](https://github.com/vamsigp/EVA5/blob/master/week-7/Trails-2/val_test%20losses_change.png)
+
+### Misclassified Images
+![Misclassified Images](https://github.com/vamsigp/EVA5/blob/master/week-7/Trails-2/misclassified_images.png)
+
+##
+
 ## Learning - 
 1. Could write Framework in a more better way
 
