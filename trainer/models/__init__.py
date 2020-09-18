@@ -1,2 +1,2 @@
-from cifar10 import *
-from resnet import *
+from .cifar10 import *
+from .resnet import *
