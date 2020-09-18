@@ -66,3 +66,141 @@ class Cifar10(nn.Module):
         x = x.view(-1, 128)
         x = self.layer5(x)
         return x
+		
+
+class Cifar10Model(nn.Module):
+  def __init__(self):
+    super(Cifar10Model, self).__init__()
+    self.dropout = 0.1
+
+    # Input conv block
+    in_ch = 3
+    out_ch = 32
+    self.convblock1 = nn.Sequential(
+            nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=(3,3), 
+                      padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.Dropout(self.dropout),
+            nn.ReLU()
+        ) # input_side = 3, output_size = 32, RF = 3
+
+    # convolution block - 1
+    in_ch = 32
+    out_ch = 64
+    self.convblock2 = nn.Sequential(
+            nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=(3,3),
+                      padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.Dropout(self.dropout),
+            nn.ReLU()
+        ) # input_side = 32, output_size = 64, RF = 5
+
+    # Transition block - 1
+    in_ch = 64
+    out_ch = 32
+    self.convblock3 = nn.Sequential(
+            nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=(1,1),
+                      padding=0, bias=False),
+        )# input_side = 64, output_size = 32, RF = 5
+    self.pool1 = nn.MaxPool2d(2,2)
+    # input_side = 32, output_size = 16, RF = 6
+
+    # convolution block - 2
+    # Depthwise convolution - 1
+    in_ch = 32
+    out_ch = 64
+    self.depthwise1 = nn.Sequential(
+          nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=(3,3), 
+                    padding=0, groups=in_ch, bias=False),
+          nn.BatchNorm2d(out_ch),
+          nn.Dropout(self.dropout),
+          nn.ReLU()
+      ) # input_side = 16, output_size = 14, RF = ?
+
+    in_ch = 64
+    out_ch = 128
+    self.convblock4 = nn.Sequential(
+        nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=(1,1),
+                  padding=0, bias=False),
+        nn.BatchNorm2d(num_features=out_ch),
+        nn.Dropout2d(self.dropout),
+        nn.ReLU()
+        )  # input_side = 14, output_size = 14, RF = ?
+
+    self.pool2 = nn.MaxPool2d(2,2)
+    # input_side = 14, output_size = 7, RF = ?
+
+    # convolution block - 3
+    # diated 1
+    in_ch = 128
+    out_ch = 128
+    self.convblock5 = nn.Sequential(
+      nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=(3,3),
+                padding=4, dilation=2, bias=False),
+      nn.BatchNorm2d(num_features=out_ch),
+      nn.Dropout2d(self.dropout),
+      nn.ReLU()
+        )  # input_side = 7, output_size = 11, RF = ?
+    
+    in_ch = 128
+    out_ch = 128
+    self.convblock6 = nn.Sequential(
+            nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=(3,3),
+                      padding=1, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.Dropout(self.dropout),
+            nn.ReLU()
+        )  # input_side = 11, output_size = 11, RF = ?
+
+    self.pool3 = nn.MaxPool2d(2,2)
+    # input_side = 11, output_size = 5, RF = ?
+
+    # GAP
+    self.gap = nn.Sequential(
+            nn.AvgPool2d(kernel_size=5)
+        )  # output_size = 1
+    
+    # Add one more layer after GAP
+    in_ch = 128
+    out_ch = 128
+    self.convblock7 = nn.Sequential(
+            nn.Conv2d(in_channels=in_ch, out_channels=out_ch,
+                      kernel_size=(1, 1), padding=0, bias=False),
+            nn.BatchNorm2d(out_ch),
+            nn.Dropout(self.dropout),
+            nn.ReLU()
+        )
+
+    # output layer
+    in_ch = 128
+    self.convblock8 = nn.Sequential(
+        nn.Conv2d(in_channels=in_ch, out_channels=10,
+                  kernel_size=(1, 1), padding=0, bias=False),
+        )
+
+    self.dropout = nn.Dropout(self.dropout)
+
+
+  def forward(self, x):
+    x = self.convblock1(x)
+    x = self.convblock2(x)
+    x = self.convblock3(x)
+    x = self.pool1(x)
+    x = self.depthwise1(x)
+    x = self.convblock4(x)
+    x = self.pool2(x)
+    x = self.convblock5(x)
+    x = self.convblock6(x)
+    x = self.pool3(x)
+    x = self.gap(x)
+    x = self.convblock7(x)
+    x = self.convblock8(x)
+
+    x = x.view(-1, 10)
+    return F.log_softmax(x, dim=-1)
+    # return x
+
+
+def cifar10Model():
+	return Cifar10Model()
+	
