@@ -26,7 +26,7 @@ class Trainer():
     
   def train_model(self, lambda_l1, epochs = 5):
     for epoch in range(epochs):
-        print("Current EPOCH:", epoch+1)
+        print("Current EPOCH:", epoch, "last LR=",scheduler.get_last_lr(), "LR = ", scheduler.get_lr())
         self.train(epoch, lambda_l1)
         self.is_last_epoch = epoch==epochs
         self.lr_scheduler.step()
