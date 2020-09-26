@@ -14,13 +14,13 @@ class Trainer():
     self.test_acc = []
     self.model = model
     self.device = device
-....self.train_loader = train_loader
+    self.train_loader = train_loader
     self.test_loader = test_loader
     self.optimizer = optimizer
     self.loss_func = loss_func
     self.lr_scheduler = lr_scheduler
     
-  def train_model(self, epoch = 5, lambda_l1):
+  def train_model(self, lambda_l1, epochs = 5):
     for epoch in range(epochs):
         print("EPOCH:", epoch+1)
         train(epoch, lambda_l1)
