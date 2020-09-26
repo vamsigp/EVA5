@@ -10,7 +10,7 @@ class album_compose():
             Rotate((-7.0, 7.0)),
             Cutout(),
             CoarseDropout(),
-            RandomCrop(224,224),
+            RandomCrop(10,10),
             HorizontalFlip(),
             Normalize(
                 mean=[0.5, 0.5, 0.5],
