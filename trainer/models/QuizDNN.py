@@ -11,7 +11,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class QuizDNN(nn.Module):
-    def __init__(self, args):
+    def __init__(self):
+        dropout_value
         super(QuizDNN, self).__init__()
         
         
