@@ -6,11 +6,11 @@ import numpy as np
 class album_compose():
 
     def __init__(self):
-        self.albumentation_transforms = Compose([  # Resize(256, 256),
+        self.albumentation_transforms = Compose([
             Rotate((-7.0, 7.0)),
-            Cutout(),
+            # Cutout(),
             CoarseDropout(),
-            RandomCrop(10,10),
+            # RandomCrop(10,10),
             HorizontalFlip(),
             Normalize(
                 mean=[0.5, 0.5, 0.5],
