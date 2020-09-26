@@ -22,7 +22,7 @@ class Trainer():
     self.optimizer = optimizer
     self.loss_func = loss_func
     self.lr_scheduler = lr_scheduler
-    self.misclassifed = []
+
     
   def train_model(self, lambda_l1, epochs = 5):
     for epoch in range(epochs):
@@ -98,15 +98,6 @@ class Trainer():
               pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
               is_correct = pred.eq(target.view_as(pred))
               correct += is_correct.sum().item()
-              if self.is_last_epoch:
-                misclassified_inds = (is_correct==0).nonzero()[:,0]
-                for mis_ind in misclassified_inds:
-                    self.misclassifed.append({
-                        "target": target[mis_ind].cpu().numpy(),
-                        "pred": pred[mis_ind][0].cpu().numpy(),
-                        "img": data[mis_ind].cpu().numpy()
-                    })
-                
 
       test_loss /= len(self.test_loader.dataset)
       self.test_losses.append(test_loss)
@@ -118,7 +109,7 @@ class Trainer():
       self.test_acc.append(100. * correct / len(self.test_loader.dataset))
 
   def getValues(self):
-    return (self.train_losses, self.test_losses, self.train_acc, self.test_acc)
+    return (self.train_loss_total, self.train_acc_total, self.test_losses, self.test_acc)
 
   def get_misclassified(self):
     self.model.eval()
@@ -143,7 +134,7 @@ class Trainer():
                 })
             correct += is_correct.sum().item()
 
-    return (self.misclassifed, misclassified_imgs)
+    return misclassified_imgs
     
     
   def classwise_acc(self, classes):
