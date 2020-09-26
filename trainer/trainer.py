@@ -29,7 +29,7 @@ class Trainer():
         print("Current EPOCH:", epoch+1)
         self.train(epoch, lambda_l1)
         self.is_last_epoch = epoch==epochs
-        self.scheduler.step()
+        self.lr_scheduler.step()
         self.test()
     return (self.train_loss_total, self.train_acc_total, self.test_losses, self.test_acc)
     
