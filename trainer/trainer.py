@@ -9,6 +9,7 @@ class Trainer():
 
   def __init__(self, model, device, train_loader, test_loader, optimizer, loss_func, lr_scheduler):
     self.train_losses = []
+    self.is_last_epoch = False
     self.test_losses = []
     self.train_acc = []
     self.test_acc = []
@@ -90,7 +91,7 @@ class Trainer():
               pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
               is_correct = pred.eq(target.view_as(pred))
               correct += is_correct.sum().item()
-              if is_last_epoch:
+              if self.is_last_epoch:
                 misclassified_inds = (is_correct==0).nonzero()[:,0]
                 for mis_ind in misclassified_inds:
                     self.misclassifed.append({
