@@ -19,11 +19,13 @@ class Trainer():
     self.optimizer = optimizer
     self.loss_func = loss_func
     self.lr_scheduler = lr_scheduler
+    self.misclassifed = []
     
   def train_model(self, lambda_l1, epochs = 5):
     for epoch in range(epochs):
         print("EPOCH:", epoch+1)
         self.train(epoch, lambda_l1)
+        self.is_last_epoch = epoch==epochs
         self.test()
     return (self.train_losses, self.train_acc, self.test_losses, self.test_acc)
         
@@ -84,9 +86,19 @@ class Trainer():
           for data, target in self.test_loader:
               data, target = data.to(self.device), target.to(self.device)
               output = self.model(data)
-              test_loss += F.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
+              test_loss += self.loss_func(output, target, reduction='sum').item()  # sum up batch loss
               pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
-              correct += pred.eq(target.view_as(pred)).sum().item()
+              is_correct = pred.eq(target.view_as(pred))
+              correct += is_correct.sum().item()
+              if is_last_epoch:
+                misclassified_inds = (is_correct==0).nonzero()[:,0]
+                  for mis_ind in misclassified_inds:
+                    self.misclassifed.append({
+                        "target": target[mis_ind].cpu().numpy(),
+                        "pred": pred[mis_ind][0].cpu().numpy(),
+                        "img": data[mis_ind].cpu().numpy()
+                    })
+                
 
       test_loss /= len(self.test_loader.dataset)
       self.test_losses.append(test_loss)
@@ -101,34 +113,47 @@ class Trainer():
     return (self.train_losses, self.test_losses, self.train_acc, self.test_acc)
 
   def get_misclassified(self):
-    misclassified = []
-    misclassified_pred = []
-    misclassified_target = []
-    # put the model to evaluation mode
     self.model.eval()
-    # turn off gradients
+    test_loss = 0
+    correct = 0
     with torch.no_grad():
         for data, target in self.test_loader:
-          # move them to the respective device
-          data, target = data.to(self.device), target.to(self.device)
-          # do inferencing
-          output = self.model(data)
-          # get the predicted output
-          pred = output.argmax(dim=1, keepdim=True)
+            data, target = data.to(self.device), target.to(self.device)
+            output = self.model(data)
+            pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
+            is_correct = pred.eq(target.view_as(pred))
+            if True:
+              misclassified_inds = (is_correct==0).nonzero()[:,0]
+              for mis_ind in misclassified_inds:
+                if len(misclassified_imgs) == 25:
+                  break
+                misclassified_imgs.append({
+                    "target": target[mis_ind].cpu().numpy(),
+                    "pred": pred[mis_ind][0].cpu().numpy(),
+                    "img": data[mis_ind].cpu().numpy()
+                })
+            correct += is_correct.sum().item()
 
-          # get the current misclassified in this batch
-          list_misclassified = (pred.eq(target.view_as(pred)) == False)
-          batch_misclassified = data[list_misclassified]
-          batch_mis_pred = pred[list_misclassified]
-          batch_mis_target = target.view_as(pred)[list_misclassified]
-
-          misclassified.append(batch_misclassified)
-          misclassified_pred.append(batch_mis_pred)
-          misclassified_target.append(batch_mis_target)
-
-    # group all the batched together
-    misclassified = torch.cat(misclassified)
-    misclassified_pred = torch.cat(misclassified_pred)
-    misclassified_target = torch.cat(misclassified_target)
-
-    return list(map(lambda x, y, z: (x, y, z), misclassified, misclassified_pred, misclassified_target))
+    return (self.misclassifed, misclassified_imgs)
+    
+    
+  def classwise_acc(classes):
+    class_correct = list(0. for i in range(10))
+    class_total = list(0. for i in range(10))
+    with torch.no_grad():
+        for images, labels in self.test_loader:
+            images, labels = images.to(self.device), labels.to(self.device)
+            outputs = self.model(images)
+            _, predicted = torch.max(outputs, 1)
+            c = (predicted == labels).squeeze()
+            for i in range(4):
+                label = labels[i]
+                class_correct[label] += c[i].item()
+                class_total[label] += 1
+    
+    # print class-wise test accuracies
+    print()
+    for i in range(10):
+      print('Accuracy of %5s : %2d %%' % (
+          classes[i], 100 * class_correct[i] / class_total[i]))
+    print()
