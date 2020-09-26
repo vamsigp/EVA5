@@ -23,8 +23,8 @@ class Trainer():
   def train_model(self, lambda_l1, epochs = 5):
     for epoch in range(epochs):
         print("EPOCH:", epoch+1)
-        train(epoch, lambda_l1)
-        test()
+        self.train(epoch, lambda_l1)
+        self.test()
     return (self.train_losses, self.train_acc, self.test_losses, self.test_acc)
         
 
