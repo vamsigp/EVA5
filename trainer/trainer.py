@@ -26,11 +26,12 @@ class Trainer():
 
     def train_model(self, lambda_l1, epochs=5):
         for epoch in range(epochs):
-            print("Current EPOCH:", epoch, "last LR=", self.lr_scheduler.get_last_lr(), "LR = ",
-                  self.lr_scheduler.get_lr())
+			if self.lr_scheduler is not None:
+				print("Current EPOCH:", epoch, "last LR=", self.lr_scheduler.get_last_lr(), "LR = ", self.lr_scheduler.get_lr())
             self.train(epoch, lambda_l1)
             self.is_last_epoch = epoch == epochs
-            self.lr_scheduler.step()
+            if self.lr_scheduler is not None:
+				self.lr_scheduler.step()
             self.test()
         return (self.train_loss_total, self.train_acc_total, self.test_losses, self.test_acc)
 
