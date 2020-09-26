@@ -31,7 +31,7 @@ class DataEngine(object):
 
         # Dataset and Creating Train/Test Split
         train_set = torchvision.datasets.CIFAR10(root='./data', train=True,
-                                                download=True, transform=train_transform)
+                                                download=True, transform=self.train_transform)
         test_set = torchvision.datasets.CIFAR10(root='./data', train=False,
                                                download=True, transform=transform)
 
