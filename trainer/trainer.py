@@ -115,6 +115,7 @@ class Trainer():
 
   def get_misclassified(self):
     self.model.eval()
+    misclassified_imgs = []
     test_loss = 0
     correct = 0
     with torch.no_grad():
@@ -138,7 +139,7 @@ class Trainer():
     return (self.misclassifed, misclassified_imgs)
     
     
-  def classwise_acc(classes):
+  def classwise_acc(self, classes):
     class_correct = list(0. for i in range(10))
     class_total = list(0. for i in range(10))
     with torch.no_grad():
