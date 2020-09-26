@@ -8,10 +8,12 @@ from tqdm import tqdm
 class Trainer():
 
   def __init__(self, model, device, train_loader, test_loader, optimizer, loss_func, lr_scheduler):
-    self.train_losses = []
     self.is_last_epoch = False
+    self.train_losses = [] # detailed training loss
     self.test_losses = []
-    self.train_acc = []
+    self.train_acc = [] # detailed  training accuracy
+    self.train_acc_total = [] # per epoch training accuracy
+    self.train_loss_total = [] # per epoch train loss
     self.test_acc = []
     self.model = model
     self.device = device
@@ -24,11 +26,16 @@ class Trainer():
     
   def train_model(self, lambda_l1, epochs = 5):
     for epoch in range(epochs):
-        print("EPOCH:", epoch+1)
+        print("Current EPOCH:", epoch+1)
         self.train(epoch, lambda_l1)
         self.is_last_epoch = epoch==epochs
+        self.scheduler.step()
         self.test()
-    return (self.train_losses, self.train_acc, self.test_losses, self.test_acc)
+    return (self.train_loss_total, self.train_acc_total, self.test_losses, self.test_acc)
+    
+    
+  def get_detailed_train_stats(self):
+    return (self.train_losses, self.train_acc)
         
 
   def train(self, epoch, lambda_l1):
@@ -36,6 +43,7 @@ class Trainer():
     pbar = tqdm(self.train_loader)
     correct = 0
     processed = 0
+    loss = 0
     for batch_idx, (data, target) in enumerate(pbar):
       # get samples
       data, target = data.to(self.device), target.to(self.device)
@@ -67,17 +75,16 @@ class Trainer():
       loss.backward()
       self.optimizer.step()
 
-      # Learning rate for onecycle LR # Vamsi - added
-      # scheduler.step()
-
-      # Update pbar-tqdm
-      
       pred = y_pred.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
       correct += pred.eq(target.view_as(pred)).sum().item()
       processed += len(data)
 
       pbar.set_description(desc= f'Train set: Loss={loss.item()} Batch_id={batch_idx} Accuracy={100*correct/processed:0.2f}')
       self.train_acc.append(100*correct/processed)
+      
+    training_accuracy_perepoch = 100 * correct/processed
+    self.train_acc_total.append(training_accuracy_perepoch)
+    self.train_loss_total.append(loss)
 
   def test(self):
       self.model.eval()
