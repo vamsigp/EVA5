@@ -86,7 +86,7 @@ class Trainer():
           for data, target in self.test_loader:
               data, target = data.to(self.device), target.to(self.device)
               output = self.model(data)
-              test_loss += self.loss_func(output, target, reduction='sum').item()  # sum up batch loss
+              test_loss += self.loss_func(output, target).item()  # sum up batch loss
               pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
               is_correct = pred.eq(target.view_as(pred))
               correct += is_correct.sum().item()
