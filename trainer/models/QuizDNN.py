@@ -12,7 +12,7 @@ import torch.nn.functional as F
 
 class QuizDNN(nn.Module):
     def __init__(self):
-        dropout_value
+        self.dropout_value = 0.15
         super(QuizDNN, self).__init__()
         
         
