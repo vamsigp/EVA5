@@ -13,20 +13,20 @@ class Trainer():
     self.train_acc = []
     self.test_acc = []
     self.model = model
-	self.device = device
-	self.train_loader = train_loader
-	self.test_loader = test_loader
-	self.optimizer = optimizer
-	self.loss_func = loss_func
-	self.lr_scheduler = lr_scheduler
-	
+    self.device = device
+....self.train_loader = train_loader
+    self.test_loader = test_loader
+    self.optimizer = optimizer
+    self.loss_func = loss_func
+    self.lr_scheduler = lr_scheduler
+    
   def train_model(self, epoch = 5, lambda_l1):
-	for epoch in range(epochs):
-		print("EPOCH:", epoch+1)
-		train(epoch, lambda_l1)
-		test()
-	return (self.train_losses, self.train_acc, self.test_losses, self.test_acc)
-		
+    for epoch in range(epochs):
+        print("EPOCH:", epoch+1)
+        train(epoch, lambda_l1)
+        test()
+    return (self.train_losses, self.train_acc, self.test_losses, self.test_acc)
+        
 
   def train(self, epoch, lambda_l1):
     self.model.train()
@@ -53,10 +53,10 @@ class Trainer():
       # L1 loss
       loss_l1 = 0
       # lambda_l1 = 0.05
-	  if lambda_l1 > 0:
-		  for p in self.model.parameters():
-			loss_l1 = loss_l1 + p.abs().sum()
-		  loss = loss + lambda_l1*loss_l1
+      if lambda_l1 > 0:
+          for p in self.model.parameters():
+            loss_l1 = loss_l1 + p.abs().sum()
+          loss = loss + lambda_l1*loss_l1
 
       self.train_losses.append(loss)
 
