@@ -92,7 +92,7 @@ class Trainer():
               correct += is_correct.sum().item()
               if is_last_epoch:
                 misclassified_inds = (is_correct==0).nonzero()[:,0]
-                  for mis_ind in misclassified_inds:
+                for mis_ind in misclassified_inds:
                     self.misclassifed.append({
                         "target": target[mis_ind].cpu().numpy(),
                         "pred": pred[mis_ind][0].cpu().numpy(),
