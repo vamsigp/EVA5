@@ -17,16 +17,20 @@ class DataEngine(object):
 		self.num_workers = args.num_workers
 		self.load()
 
-	def load(self):
+	def load(self, train_transform=None):
 		# Data Transformations
 		transform = transforms.Compose(
 		    [transforms.RandomHorizontalFlip(),
 		     transforms.ToTensor(),
 		     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+			 
+		
+		if train_transform is None:
+			train_transform = transform
 
 		# Dataset and Creating Train/Test Split
 		train_set = torchvision.datasets.CIFAR10(root='./data', train=True,
-		                                        download=True, transform=transform)
+		                                        download=True, transform=train_transform)
 		test_set = torchvision.datasets.CIFAR10(root='./data', train=False,
 		                                       download=True, transform=transform)
 
