@@ -28,6 +28,9 @@ class Trainer():
         for epoch in range(epochs):
             if self.lr_scheduler is not None:
                 print("Current EPOCH:", epoch, "last LR=", self.lr_scheduler.get_last_lr(), "LR = ", self.lr_scheduler.get_lr())
+            else:
+                print("Current EPOCH:", epoch)
+                
             self.train(epoch, lambda_l1)
             self.is_last_epoch = epoch == epochs
             if self.lr_scheduler is not None:
