@@ -10,9 +10,9 @@ class Trainer():
 
     def __init__(self, model, device, train_loader, test_loader, optimizer, loss_func, lr_scheduler):
         self.is_last_epoch = False
-        self.train_losses = []  # detailed training loss
+#         self.train_losses = []  # detailed training loss
         self.test_losses = []
-        self.train_acc = []  # detailed  training accuracy
+#         self.train_acc = []  # detailed  training accuracy
         self.train_acc_total = []  # per epoch training accuracy
         self.train_loss_total = []  # per epoch train loss
         self.test_acc = []
@@ -35,8 +35,8 @@ class Trainer():
             self.test()
         return (self.train_loss_total, self.train_acc_total, self.test_losses, self.test_acc)
 
-    def get_detailed_train_stats(self):
-        return (self.train_losses, self.train_acc)
+#    def get_detailed_train_stats(self):
+#        return (self.train_losses, self.train_acc)
 
     def train(self, epoch, lambda_l1):
         self.model.train()
@@ -69,7 +69,7 @@ class Trainer():
                     loss_l1 = loss_l1 + p.abs().sum()
                 loss = loss + lambda_l1 * loss_l1
 
-            self.train_losses.append(loss)
+#             self.train_losses.append(loss)
 
             # Backpropagation
             loss.backward()
@@ -81,7 +81,7 @@ class Trainer():
 
             pbar.set_description(
                 desc=f'Train set: Loss={loss.item()} Batch_id={batch_idx} Accuracy={100 * correct / processed:0.2f}')
-            self.train_acc.append(100 * correct / processed)
+#             self.train_acc.append(100 * correct / processed)
 
         training_accuracy_perepoch = 100 * correct / processed
         self.train_acc_total.append(training_accuracy_perepoch)
