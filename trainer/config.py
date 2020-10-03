@@ -5,7 +5,7 @@ class ModelConfig(object):
 	def __init__(self, train_transform=None):
 		super(ModelConfig, self).__init__()
 		self.seed = 1
-		self.batch_size_cuda = 64
+		self.batch_size_cuda = 128
 		self.batch_size_cpu = 64	
 		self.num_workers = 4
 		self.epochs = 50
