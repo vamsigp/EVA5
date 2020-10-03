@@ -41,7 +41,7 @@ class Trainer():
 
             if self.lr_scheduler is not None:
                 if isinstance(self.lr_scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
-                    val_loss = self.test_losses[-1]
+                    val_loss = tst_metric
                     print("ReduceLROnPlateau, ReduceLROnPlateau::step(), val_loss", val_loss)
                     self.lr_scheduler.step(val_loss)
 
