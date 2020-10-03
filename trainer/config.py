@@ -2,7 +2,7 @@ import pprint
 
 class ModelConfig(object):
 
-	def __init__(self,):
+	def __init__(self, train_transform=None):
 		super(ModelConfig, self).__init__()
 		self.seed = 1
 		self.batch_size_cuda = 64
@@ -10,6 +10,7 @@ class ModelConfig(object):
 		self.num_workers = 4
 		self.epochs = 50
 		self.dropout_value = 0.15
+		self.train_transform = train_transform
 
 	def print_config(self):
 		print("Model Parameters:")
