@@ -26,12 +26,11 @@ class Trainer():
 
     def train_model(self, lambda_l1, epochs=5):
         for epoch in range(epochs):
+            print("\nCurrent EPOCH:", epoch)
 
             if self.lr_scheduler is not None:
                 if not isinstance(self.lr_scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
                     print("Current EPOCH:", epoch, "last LR=", self.lr_scheduler.get_last_lr(), "LR = ", self.lr_scheduler.get_lr())
-            else:
-                print("Current EPOCH:", epoch)
 
             self.train(epoch, lambda_l1)
             self.is_last_epoch = epoch == epochs
