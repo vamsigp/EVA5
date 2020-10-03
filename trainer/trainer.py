@@ -31,6 +31,9 @@ class Trainer():
             if self.lr_scheduler is not None:
                 if not isinstance(self.lr_scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
                     print("Current EPOCH:", epoch, "last LR=", self.lr_scheduler.get_last_lr(), "LR = ", self.lr_scheduler.get_lr())
+                else:
+                    print("Learning Rate = ", self.optimizer.param_groups[0]['lr'])
+                    # https://discuss.pytorch.org/t/how-to-retrieve-learning-rate-from-reducelronplateau-scheduler/54234
 
             self.train(epoch, lambda_l1)
             self.is_last_epoch = epoch == epochs
