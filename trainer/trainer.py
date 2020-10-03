@@ -120,11 +120,11 @@ class Trainer():
                 is_correct = pred.eq(target.view_as(pred))
                 correct += is_correct.sum().item()
 
-        #test_loss /= len(self.test_loader.dataset)
-        self.test_losses.append(test_loss / len(self.test_loader.dataset))
+        test_loss /= len(self.test_loader.dataset)
+        self.test_losses.append(test_loss)
 
         print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)\n'.format(
-            test_loss / len(self.test_loader.dataset), correct, len(self.test_loader.dataset),
+            test_loss, correct, len(self.test_loader.dataset),
             100. * correct / len(self.test_loader.dataset)))
 
         self.test_acc.append(100. * correct / len(self.test_loader.dataset))
