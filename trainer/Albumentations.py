@@ -10,7 +10,7 @@ class album_compose():
             Rotate((-7.0, 7.0)),
             Cutout(),
             CoarseDropout(),
-            RandomSizedCrop':{'height':32,'width':32,'min_max_height':[28,28]},
+            # RandomSizedCrop':{'height':32,'width':32,'min_max_height':[28,28]},
             # RandomCrop(10,10),
             HorizontalFlip(),
             Normalize(
