@@ -15,3 +15,6 @@ class ModelConfig(object):
 	def print_config(self):
 		print("Model Parameters:")
 		pprint.pprint(vars(self), indent=2)
+		
+	def week_11_args(self):
+		self.batch_size_cuda = 512
