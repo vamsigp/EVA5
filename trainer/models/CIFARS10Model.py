@@ -33,7 +33,7 @@ class ResBlock(nn.Module):
 # Add(X, R1)
 class IntermediateLayer(nn.Module):
     def __init__(self, in_ch, out_ch):
-        super(IntermediateLayer).__init__()
+        super(IntermediateLayer, self).__init__()
 
         self.conv1 = nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=(3, 3), stride=1, padding=1,
                                bias=False)
