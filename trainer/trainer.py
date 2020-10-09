@@ -23,6 +23,7 @@ class Trainer():
         self.optimizer = optimizer
         self.loss_func = loss_func
         self.lr_scheduler = lr_scheduler
+        self.lr = []
 
     def train_model(self, lambda_l1, epochs=5):
         for epoch in range(epochs):
@@ -33,6 +34,7 @@ class Trainer():
                     print("Current EPOCH:", epoch, "last LR=", self.lr_scheduler.get_last_lr(), "LR = ", self.lr_scheduler.get_lr())
                 else:
                     print("Learning Rate(ReduceLROnPlateau) = ", self.optimizer.param_groups[0]['lr'])
+                    lr.append(self.optimizer.param_groups[0]['lr'])
                     # https://discuss.pytorch.org/t/how-to-retrieve-learning-rate-from-reducelronplateau-scheduler/54234
 
             self.train(epoch, lambda_l1)
@@ -178,3 +180,6 @@ class Trainer():
             print('Accuracy of %5s : %2d %%' % (
                 classes[i], 100 * class_correct[i] / class_total[i]))
         print()
+        
+     def getLr(self):
+        return self.lr
