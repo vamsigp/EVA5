@@ -13,7 +13,7 @@ class ResBlock(nn.Module):
                                bias=False)
         self.bn1 = nn.BatchNorm2d(num_features=out_ch)
 
-        self.conv2 = nn.Conv2d(in_channels=out_ch, out_channels=out_ch, kernel_size=(3, 3), stride=1, padding=1,
+        self.conv2 = nn.Conv2d(in_channels=in_ch, out_channels=out_ch, kernel_size=(3, 3), stride=1, padding=1,
                                bias=False)
         self.bn2 = nn.BatchNorm2d(num_features=out_ch)
 
