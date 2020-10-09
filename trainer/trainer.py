@@ -183,5 +183,5 @@ class Trainer():
                 classes[i], 100 * class_correct[i] / class_total[i]))
         print()
         
-     def getLr(self):
+    def getLr(self):
         return self.lr
