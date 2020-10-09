@@ -26,16 +26,29 @@ class Trainer():
 
     def train_model(self, lambda_l1, epochs=5):
         for epoch in range(epochs):
+            print("\nCurrent EPOCH:", epoch)
+
             if self.lr_scheduler is not None:
-                print("Current EPOCH:", epoch, "last LR=", self.lr_scheduler.get_last_lr(), "LR = ", self.lr_scheduler.get_lr())
-            else:
-                print("Current EPOCH:", epoch)
-                
+                if not isinstance(self.lr_scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
+                    print("Current EPOCH:", epoch, "last LR=", self.lr_scheduler.get_last_lr(), "LR = ", self.lr_scheduler.get_lr())
+                else:
+                    print("Learning Rate(ReduceLROnPlateau) = ", self.optimizer.param_groups[0]['lr'])
+                    # https://discuss.pytorch.org/t/how-to-retrieve-learning-rate-from-reducelronplateau-scheduler/54234
+
             self.train(epoch, lambda_l1)
             self.is_last_epoch = epoch == epochs
+            tst_metric = self.test()
+
             if self.lr_scheduler is not None:
-                self.lr_scheduler.step()
-            self.test()
+                if isinstance(self.lr_scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
+                    val_loss = tst_metric # test_losses[-1]
+                    print("ReduceLROnPlateau, ReduceLROnPlateau::step(), val_loss", val_loss)
+                    self.lr_scheduler.step(val_loss)
+
+                if isinstance(self.lr_scheduler, torch.optim.lr_scheduler.StepLR):
+                    self.lr_scheduler.step()
+
+
         return (self.train_loss_total, self.train_acc_total, self.test_losses, self.test_acc)
 
 #    def get_detailed_train_stats(self):
@@ -86,6 +99,10 @@ class Trainer():
                 desc=f'Train set: Loss={loss.item()} Batch_id={batch_idx} Accuracy={100 * correct / processed:0.2f}')
 #             self.train_acc.append(100 * correct / processed)
 
+            if isinstance(self.lr_scheduler, torch.optim.lr_scheduler.OneCycleLR):
+                self.lr_scheduler.step()
+
+
         training_accuracy_perepoch = 100 * correct / processed
         self.train_acc_total.append(training_accuracy_perepoch)
         self.train_loss_total.append(loss)
@@ -111,6 +128,7 @@ class Trainer():
             100. * correct / len(self.test_loader.dataset)))
 
         self.test_acc.append(100. * correct / len(self.test_loader.dataset))
+        return test_loss
 
     def getValues(self):
         return (self.train_loss_total, self.train_acc_total, self.test_losses, self.test_acc)
