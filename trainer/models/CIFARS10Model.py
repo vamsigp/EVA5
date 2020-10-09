@@ -55,13 +55,13 @@ class CIFARS10Model(nn.Module):
     def __init__(self):
         super(CIFARS10Model, self).__init__()
         
-        # 1
-        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(32)
+#         # 1
+#         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1, bias=False)
+#         self.bn1 = nn.BatchNorm2d(32)
 
         # PrepLayer - Conv 3x3 s1, p1) >> BN >> RELU [64k]
         self.prep_layer = nn.Sequential(
-            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=(3, 3), stride=1, padding=1, bias=False),
+            nn.Conv2d(in_channels=3, out_channels=64, kernel_size=(3, 3), stride=1, padding=1, bias=False),
             nn.BatchNorm2d(num_features=64),
             nn.ReLU()
         )
@@ -94,8 +94,8 @@ class CIFARS10Model(nn.Module):
         self.fc = nn.Conv2d(in_channels=512, out_channels=10, kernel_size=1, stride=1, bias=False)
 
     def forward(self, x):
-        out = F.relu(self.bn1(self.conv1(x))) # 1
-        out = self.prep_layer(out)
+#         out = F.relu(self.bn1(self.conv1(x))) # 1
+        out = self.prep_layer(x)
         out = self.layer1(out)
         out = self.layer2(out)
         out = self.layer3(out)
