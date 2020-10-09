@@ -1,4 +1,4 @@
-from albumentations import Compose, RandomCrop, Normalize, HorizontalFlip, Resize,Rotate, Cutout, CoarseDropout, PadIfNeeded
+from albumentations import Compose, RandomCrop, Normalize, HorizontalFlip, Resize,Rotate, Cutout, PadIfNeeded
 from albumentations.pytorch import ToTensor
 import numpy as np
 
@@ -8,7 +8,7 @@ class album_compose():
         self.albumentation_transforms = Compose([
             Rotate((-7.0, 7.0)),
             Cutout(),
-            CoarseDropout(),
+#             CoarseDropout(),
             # RandomSizedCrop':{'height':32,'width':32,'min_max_height':[28,28]},
             # RandomCrop(10,10),
             HorizontalFlip(),
